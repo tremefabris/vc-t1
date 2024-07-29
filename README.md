@@ -1,4 +1,4 @@
-# vc-t1
+# Visão Computacional - Trabalho 1
 Primeiro trabalho da disciplina de Visão Computacional, ministrada pelo Prof. Dr. Cesar H. Comin
 
 Alunos:
