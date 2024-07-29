@@ -3,5 +3,5 @@ Primeiro trabalho da disciplina de Visão Computacional, ministrada pelo Prof. D
 
 Alunos:
 - Vitor Lopes Fabris ([tremefabris](https://github.com/tremefabris))
-- Jayme Sakae dos Reis Furuyama ()
+- Jayme Sakae dos Reis Furuyama ([jaymesakae](https://github.com/jaymesakae))
 - Vinicius Gonçalves Perillo ()
