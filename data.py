@@ -66,7 +66,6 @@ def _split_train_val(image_file_paths: list[str],
 
 
 
-# TODO: inserir shuffle
 # TODO: inserir checagem p/ se num_val_per_breed exceder limites válidos
 # TODO: existe uma maneira menos repetitiva de fazer esse processamento duplo? (pra train e val)
 def load_data(shuffle: bool = True,
