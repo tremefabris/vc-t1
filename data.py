@@ -21,7 +21,7 @@ def _extract_labels_from_file_name(file_name: str,
                                    labels: dict,
                                    index: int):
 
-    file_name = os.path.split(file_name)[-1]                        # should i transform this into a func?
+    file_name = os.path.split(file_name)[-1]
     file_name = file_name.split('_')
 
     labels['index'].append(index)
@@ -30,7 +30,7 @@ def _extract_labels_from_file_name(file_name: str,
     labels['species'].append(file_name[2])
     labels['breed_label'].append(file_name[3][:-4])                 # weird indexing to resolve file extension
 
-def _get_transforms():
+def _get_transforms() -> transforms.Compose:
     IMAGENET_MEAN = [0.485, 0.456, 0.406]
     IMAGENET_STD  = [0.229, 0.224, 0.225]
 
