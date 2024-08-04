@@ -69,6 +69,7 @@ def _split_train_val(image_file_paths: list[str],
 # TODO: inserir checagem p/ se num_val_per_breed exceder limites válidos
 # TODO: existe uma maneira menos repetitiva de fazer esse processamento duplo? (pra train e val)
 def load_data(shuffle: bool = True,
+              random_seed: int = 1917,
               num_val_per_breed: int = 50,
               image_folder: str = 'dataset/preprocessed/',
               ) -> tuple[tuple[torch.Tensor, pd.DataFrame], tuple[torch.Tensor, pd.DataFrame]]:
@@ -78,8 +79,8 @@ def load_data(shuffle: bool = True,
                                                         num_val_per_breed)
 
     if shuffle:
-        random.shuffle(train_file_paths)
-        random.shuffle(val_file_paths)
+        random.Random(random_seed).shuffle(train_file_paths)
+        random.Random(random_seed).shuffle(val_file_paths)
 
 
     train_images = torch.zeros(len(train_file_paths), 3, 224, 224, dtype=torch.float32)
