@@ -2,7 +2,6 @@ from torch import nn
 from torchvision import models
 
 
-# TODO: adicionar suporte a CUDA
 def load_resnet18(top: bool = False,
                   imagenet_weights: bool = True,
                   eval_mode: bool = True) -> models.ResNet:
