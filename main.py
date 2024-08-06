@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 from data import OxfordPetsDataset
 from model import load_resnet18
@@ -36,8 +37,11 @@ if __name__ == '__main__':
         labels.append(y)
     
 
-    features = torch.cat(features, dim=0)
-    labels   = torch.cat(labels, dim=0)
+    features = torch.cat(features, dim=0).cpu()
+    labels   = torch.cat(labels, dim=0).cpu()
 
     print(features.shape)
     print(labels.shape)
+
+    np.save('dataset/extracted-features/images.npy', features)
+    np.save('dataset/extracted-features/labels.npy', labels)
