@@ -1,27 +1,43 @@
 import torch
-from data import load_data
+
+from data import OxfordPetsDataset
 from model import load_resnet18
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from time import sleep                                              # for memory debugging
 
-
+# TODO: adicionar ArgParser para definir hyperparams em CLI
 if __name__ == '__main__':
-
-    (train_x, train_y), (val_x, val_y) = load_data(shuffle=True, num_val_per_breed=50)
-
-
-    train_features = torch.zeros((train_x.shape[0], 512))
-    val_features   = torch.zeros((val_x.shape[0], 512))
-
-
-    model = load_resnet18()
-
-
-    for idx, train_sample in enumerate(tqdm(train_x, desc="Extracting training features")):
-        with torch.no_grad():
-            train_features[idx] = model(train_sample.unsqueeze(0))
     
-    for idx, val_sample in enumerate(tqdm(val_x, desc="Extracting validation features")):
+    BATCH_SIZE = 64
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    NUM_PROCESSES = 4
+
+
+    data_transforms = OxfordPetsDataset.imagenet_transforms()
+    dataset = OxfordPetsDataset(transform=data_transforms)
+    dataloader = DataLoader(dataset,
+                            batch_size=BATCH_SIZE,
+                            shuffle=False,
+                            num_workers=NUM_PROCESSES)
+    
+    model = load_resnet18()
+    model.to(DEVICE)
+
+
+    features = []
+    labels   = []
+    for x, y in tqdm(dataloader, desc="Extracting features"):
+        x = x.to(DEVICE)
+        y = y.to(DEVICE)
+
         with torch.no_grad():
-            val_features[idx] = model(val_sample.unsqueeze(0))
+            features.append(model(x))
+        labels.append(y)
+    
+
+    features = torch.cat(features, dim=0)
+    labels   = torch.cat(labels, dim=0)
+
+    print(features.shape)
+    print(labels.shape)
