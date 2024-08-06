@@ -18,7 +18,7 @@ class OxfordPetsDataset(Dataset):
 
         self.full_labels = self.__load_labels()
         
-        self.labels = self.full_labels[['species', 'label']].values - 1     # -1 due to dataset intricacies
+        self.labels = self.full_labels[['index', 'species', 'label', 'breed_id']].values
         self.image_files = self.full_labels['image_path'].values
 
 
@@ -63,18 +63,20 @@ class OxfordPetsDataset(Dataset):
 
         ANNOTATION_PATH = os.path.join(self.dataset_root, _annotation_path)
 
-        annotations = (pd.read_csv(ANNOTATION_PATH, sep=' ', header=None, comment='#')
-                        .drop([3], axis='columns'))
-        annotations.columns = ['name', 'label', 'species']
+        annotations = pd.read_csv(ANNOTATION_PATH, sep=' ', header=None, comment='#')
+        annotations.columns = ['name', 'label', 'species', 'breed_id']
 
         annotations['breed'] = (annotations['name']
                                 .transform(lambda x: x.strip('_0123456789').lower())  # que coisa feia que eu fiz....
                                 .transform(lambda x: ' '.join(x.split('_')) if '_' in x else x))
                                 # será que deus ainda me ama depois disso.....
 
-        annotations['breed_index'] = (annotations['name']
-                                      .transform(lambda x: int(x.split('_')[-1])))
+        annotations['relative_breed_index'] = (annotations['name']
+                                               .transform(lambda x: int(x.split('_')[-1])))
+
+        annotations[['label', 'species', 'breed_id', 'relative_breed_index']] -= 1
 
         annotations['image_path'] = self.dataset_root + _image_folder + annotations['name'] + _image_extension
+        annotations['index'] = annotations.index
 
         return annotations
