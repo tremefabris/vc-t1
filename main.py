@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 
 from data import OxfordPetsDataset
 from model import load_resnet18
@@ -38,6 +39,9 @@ if __name__ == '__main__':
 
     features = torch.cat(features, dim=0)
     labels   = torch.cat(labels, dim=0)
+
+    features_df = pd.DataFrame(features.numpy(), columns= range(512)).join(pd.DataFrame(labels.numpy(), columns=['species_id', 'breed_id', 'breed_id_on_species']))
+    features_df.to_csv('features.csv', index= False)
 
     print(features.shape)
     print(labels.shape)
