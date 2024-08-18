@@ -21,3 +21,5 @@ n_clusters = [2, 37]
 for cluster in n_clusters:
     kmeans = KMeans(n_clusters=cluster, random_state = 42)
     kmeans.fit(x_train)
+
+    preds = kmeans.predict(x_test)

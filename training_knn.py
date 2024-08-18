@@ -27,10 +27,12 @@ for k in ks:
     # treinando
     classifier.fit(x_train, y_train)
     # calculando a acuracia para o conjunto de treinamento
-    train_accuracy.append(classifier.score(x_train, y_train))
+    y_pred_train = classifier.predict(x_train)
+    train_accuracy.append((y_pred_train==y_train).mean())
 
     # calculando as predições e a acuracia para o conjunto de teste
-    test_accuracy.append(classifier.score(x_test, y_test))
+    y_pred_test = classifier.predict(x_test)
+    test_accuracy.append((y_pred_test == y_test).mean())
 
-print(train_accuracy)
-print(test_accuracy)
+print("Acuracia treino:", train_accuracy)
+print("Acuracia teste:", test_accuracy)
