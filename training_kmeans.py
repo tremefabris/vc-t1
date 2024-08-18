@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
+from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
 
 #  importando os dados
@@ -19,7 +20,22 @@ test_accuracy = []
 n_clusters = [2, 37]
 
 for cluster in n_clusters:
-    kmeans = KMeans(n_clusters=cluster, random_state = 42)
+    if cluster == 2:
+        y_train_2 = y_train[:, 1]
+        y_test_2 = y_test[:,1]
+    elif cluster == 37:
+        y_train_2 = y_train[:, 2]
+        y_test_2 = y_test[:,2]
+
+    kmeans = KMeans(n_clusters=cluster, max_iter =  500,random_state = 42)
     kmeans.fit(x_train)
 
+    preds = kmeans.predict(x_train)
+    train_accuracy.append((preds == y_train_2).mean())
+    
     preds = kmeans.predict(x_test)
+    test_accuracy.append((preds == y_test_2).mean())
+
+
+print(f"Acuracia treino: \nk=2: {train_accuracy[0]}\nk=37: {train_accuracy[1]}")
+print(f"\nAcuracia teste:\nk=2: {test_accuracy[0]}\nk=37: {test_accuracy[1]}")

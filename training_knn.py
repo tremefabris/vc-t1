@@ -19,20 +19,28 @@ train_accuracy = []
 test_accuracy = []
 
 for k in ks:
+    if k == 2:
+        y_train_2 = y_train[:, 1]
+        y_test_2 = y_test[:,1]
+    elif k == 37:
+        y_train_2 = y_train[:, 2]
+        y_test_2 = y_test[:,2]
+
     # inicializando o knn
     knn = KNeighborsClassifier(n_neighbors=k)
     # atualizando o knn para que haja multiplas saidas
-    classifier = MultiOutputClassifier(knn, n_jobs=8)
+    # classifier = MultiOutputClassifier(knn, n_jobs=8)
 
     # treinando
-    classifier.fit(x_train, y_train)
+    knn.fit(x_train, y_train_2)
     # calculando a acuracia para o conjunto de treinamento
-    y_pred_train = classifier.predict(x_train)
-    train_accuracy.append((y_pred_train==y_train).mean())
+    y_pred_train = knn.predict(x_train)
+    train_accuracy.append((y_pred_train==y_train_2).mean())
 
     # calculando as predições e a acuracia para o conjunto de teste
-    y_pred_test = classifier.predict(x_test)
-    test_accuracy.append((y_pred_test == y_test).mean())
+    y_pred_test = knn.predict(x_test)
+    test_accuracy.append((y_pred_test == y_test_2).mean())
 
-print("Acuracia treino:", train_accuracy)
-print("Acuracia teste:", test_accuracy)
+
+print(f"Acuracia treino: \nk=2: {train_accuracy[0]}\nk=37: {train_accuracy[1]}")
+print(f"\nAcuracia teste:\nk=2: {test_accuracy[0]}\nk=37: {test_accuracy[1]}")
