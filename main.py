@@ -39,9 +39,9 @@ if __name__ == '__main__':
     
 
     features = torch.cat(features, dim=0)
-    labels   = torch.cat(labels, dim=0)
+    labels   = dataset.full_labels
 
-    features_df = pd.DataFrame(features.numpy(), columns= range(512)).join(pd.DataFrame(labels.numpy(), columns=['species_id', 'breed_id', 'breed_id_on_species']))
+    features_df = pd.DataFrame(features.numpy(), columns= range(512)).join(labels)
     features_df.to_csv('features.csv', index= False)
     features = torch.cat(features, dim=0).cpu()
     labels   = torch.cat(labels, dim=0).cpu()
