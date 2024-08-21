@@ -26,9 +26,9 @@ for k in ks:
     if k == 2:
         y_train_2 = y_train[:, 1]
         y_test_2 = y_test[:,1]
-        show = False
-    elif k == 37:
         show = True
+    elif k == 37:
+        show = False
         y_train_2 = y_train[:, 2]
         y_test_2 = y_test[:,2]
 
@@ -50,22 +50,10 @@ for k in ks:
 
 
     if show:
-        # plot_TSNE(x_test, y_test_2, y_pred_test)
+        plot_TSNE(x_test, y_test_2, y_pred_test)
         plot_confusion_matrix(confusion_matrix(y_test_2, y_pred_test), k)
-        # wrong_idx = y_test[y_pred_test!=y_test_2, 0]
-        # plot_samples(wrong_idx)
-
-
-    
-
-# plt.figure()
-# plt.title("Acuracia de treino")
-# plt.plot(ks, train_accuracy, label = "Treino")
-# plt.plot(ks, test_accuracy, label = "Teste")
-# plt.legend()
-# plt.xlabel("Numero de Vizinhos")
-# plt.ylabel("Acuracia")
-# plt.show()
+        wrong_idx = y_test[y_pred_test!=y_test_2, 0]
+        plot_samples(wrong_idx)
 
 
 print(f"Acuracia treino: \nk=2: {train_accuracy[0]}\nk=37: {train_accuracy[1]}")
