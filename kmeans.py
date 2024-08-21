@@ -106,8 +106,6 @@ def analise_clusters(scores: pd.Series):
         _create_log(group, k, metric)
         _create_clusters_image_folders(group, metric)
 
-        labels.to_csv(f'./dataset/clusters/{metric}.csv')
-
         if metric == 'silhouette':
             silhouette_plot(model, group, features)
 
