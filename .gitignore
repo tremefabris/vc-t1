@@ -171,3 +171,6 @@ graphs
 
 # Cluster Logs
 logs 
+
+experiment*
+plots/cluster*
