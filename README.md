@@ -19,11 +19,11 @@ Este repositório não contem o dataset, logo, é necessario baixar e passar o c
 Para extrair as features:
 
 ```bash
-python3 feature_extration.py --dataset_path path
+python3 feature_extraction.py --dataset_path path
 ```
 
 Para executar o treinamento do algoritmo KNN
 
 ```bash
-python3 training_knn.py
+python3 knn.py
 ```
