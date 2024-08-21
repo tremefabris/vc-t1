@@ -10,7 +10,7 @@ from joblib import Parallel, delayed
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, adjusted_rand_score
 
-from kmeans_plots import *
+from src.kmeans_plots import *
   
 
 def _compute_scores(model: KMeans, features: pd.DataFrame):

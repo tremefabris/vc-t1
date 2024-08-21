@@ -1,8 +1,8 @@
 import torch
 import numpy as np
 
-from data import OxfordPetsDataset
-from model import load_resnet18
+from src.data import OxfordPetsDataset
+from src.model import load_resnet18
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
