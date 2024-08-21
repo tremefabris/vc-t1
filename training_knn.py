@@ -5,9 +5,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.decomposition import PCA
-from plots_knn import plot_TSNE
-from plots_knn import plot_confusion_matrix
-from plots_knn import plot_samples
+from src.plots_knn import plot_TSNE
+from src.plots_knn import plot_confusion_matrix
+from src.plots_knn import plot_samples
 
 #  importando os dados
 images = np.load("./dataset/extracted-features/images.npy")
