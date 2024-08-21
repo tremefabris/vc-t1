@@ -18,7 +18,7 @@ class OxfordPetsDataset(Dataset):
 
         self.full_labels = self.__load_labels()
         
-        self.labels = self.full_labels[['index', 'species', 'label', 'breed_id']].values
+        self.labels = self.full_labels[['species_id', 'breed_id', 'breed_id_on_species']].values
         self.image_files = self.full_labels['image_path'].values
 
 
@@ -60,23 +60,29 @@ class OxfordPetsDataset(Dataset):
                       _annotation_path: str = 'annotations/list.txt',
                       _image_folder: str = 'images/',
                       _image_extension: str = '.jpg') -> pd.DataFrame:
+        '''
+            Gera o arquivo annotations com informações de labels e o caminho da imagem a partir do arquivo de anotações da base
+            Entrada: 
+                _annotation_path: caminho do arquivo de anotações da base em string
+                _image_folder: caminho para a pasta das imagens em string
+                _image_extension: extensão dos aqruvos de imagens em string
+            Saída: DataFrame pandas com as colunas: name, breed_id, specie_id, breed_id_on_species, breed, breed_index, image_path
+        '''
 
         ANNOTATION_PATH = os.path.join(self.dataset_root, _annotation_path)
+        
+        annotations = pd.read_csv(ANNOTATION_PATH, sep=' ', header=None, comment='#', 
+                                  names= ['name', 'breed_id', 'species_id', 'breed_id_on_species'])
 
-        annotations = pd.read_csv(ANNOTATION_PATH, sep=' ', header=None, comment='#')
-        annotations.columns = ['name', 'label', 'species', 'breed_id']
+        #corrige os id de 1:x para 0:x-1
+        annotations[['breed_id', 'species_id', 'breed_id_on_species']] -= 1
 
-        annotations['breed'] = (annotations['name']
-                                .transform(lambda x: x.strip('_0123456789').lower())  # que coisa feia que eu fiz....
-                                .transform(lambda x: ' '.join(x.split('_')) if '_' in x else x))
-                                # será que deus ainda me ama depois disso.....
+        breed_and_index = annotations['name'].str.lower().str.rsplit(pat= '_', n=1, expand= True)
+        breed_and_index.columns = ['breed', 'breed_index']
 
-        annotations['relative_breed_index'] = (annotations['name']
-                                               .transform(lambda x: int(x.split('_')[-1])))
-
-        annotations[['label', 'species', 'breed_id', 'relative_breed_index']] -= 1
+        annotations = annotations.join(breed_and_index)
 
         annotations['image_path'] = self.dataset_root + _image_folder + annotations['name'] + _image_extension
-        annotations['index'] = annotations.index
 
         return annotations
+

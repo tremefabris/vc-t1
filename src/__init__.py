@@ -1,3 +1,3 @@
-from data import *
-from model import *
-from plots_knn import *
+from .data import *
+from .model import *
+from .plots_knn import *

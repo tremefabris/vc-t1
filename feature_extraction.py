@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import argparse
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset_path", help="Path of dataset",
                     default='dataset/oxford-iiit-pet/', type=str)
@@ -50,10 +51,10 @@ if __name__ == '__main__':
     
 
     features = torch.cat(features, dim=0).cpu()
-    labels   = torch.cat(labels, dim=0).cpu()
-
+    labels = dataset.full_labels
+    
     print(features.shape)
     print(labels.shape)
 
     np.save('dataset/extracted-features/images.npy', features)
-    np.save('dataset/extracted-features/labels.npy', labels)
+    labels.to_csv('dataset/extracted-features/labels.csv')
