@@ -15,11 +15,7 @@ images = np.load("./dataset/extracted-features/images.npy")
 labels = pd.read_csv('dataset/extracted-features/labels.csv')
 labels = labels.drop(columns= labels.columns.difference(['species_id', 'breed_id', 'breed_id_on_species']))
 labels = labels.values
-# print(labels.shape)
-# print(np.unique(labels[:,0]))
-# print(np.unique(labels[:,1]))
-# print(np.unique(labels[:,2]))
-# print(np.unique(labels[:,3]))
+
 
 # dividindo os dados de treino e teste
 x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.25, shuffle=True, random_state = 42)
