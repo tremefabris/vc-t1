@@ -15,8 +15,7 @@ from kmeans_plots import *
 def _compute_scores(model: KMeans, features: pd.DataFrame):
     clusters_labels = model.fit_predict(features)
     sc_score = silhouette_score(features, clusters_labels, metric='euclidean')
-    db_score = davies_bouldin_score(features, clusters_labels)
-    return sc_score, db_score
+    return sc_score
 
 
 def test_k():
@@ -25,7 +24,6 @@ def test_k():
     features = data.iloc[:,:512]
 
     silhouette_coefficients = []
-    davies_bouldin = []
 
     t = 100
 
@@ -37,13 +35,12 @@ def test_k():
 
         results = Parallel(n_jobs=-1)(delayed(_compute_scores)(model, features) for _ in range(t))
 
-        sc_mean = sum(result[0] for result in results) / t
-        db_mean = sum(result[1] for result in results) / t
+        sc_mean = sum(results) / t
         
         silhouette_coefficients.append(sc_mean/t)
-        davies_bouldin.append(db_mean/t)
 
-    pd.DataFrame({'silhouette': silhouette_coefficients, 'davies_bouldin': davies_bouldin}).to_csv('clustering_scores.csv', index= False)
+    pd.DataFrame({'silhouette': silhouette_coefficients}).to_csv('clustering_scores.csv', index= False)
+    return pd.Series(silhouette_coefficients)
 
 def __copy_image(file: str, cluster: int, metric: str):
     shutil.copy(f'./{file}', f'{file.replace("oxford-iiit-pet/images", f"clusters/{metric}/c{cluster}")}')
@@ -76,28 +73,26 @@ def _create_log(data: DataFrameGroupBy, k: int):
             print('', file= sil, flush=True)
 
 
-def best_k() -> dict:
-    scores = pd.read_csv('clustering_scores.csv')
+def best_k(scores: pd.Series) -> dict:
+    #scores = pd.read_csv('clustering_scores.csv')
 
-    best_silhouette = scores['silhouette'].idxmax() + 2
-    best_davies = scores['davies_bouldin'].idxmin() + 2
+    best_silhouette = scores.idxmax() + 2
 
-    best_k_graph(scores, best_silhouette, best_davies)
+    best_k_graph(scores, best_silhouette)
 
     k_param = {
         'species': 2, 
         'silhouette': best_silhouette,
-        'davies': best_davies,
         'breed': 37
     }
 
     return k_param
 
-def analise_clusters():
+def analise_clusters(scores: pd.Series):
     data = pd.read_csv('features.csv')
     features = data.iloc[:,:512]
     labels = data.iloc[:,512:] 
-    k_param = best_k()
+    k_param = best_k(scores)
 
     for metric, k in k_param.items():
         model = KMeans(k, init= 'k-means++', n_init= 'auto', random_state= 257)
@@ -105,7 +100,6 @@ def analise_clusters():
         
 
         group = labels.groupby(metric).apply(lambda x: x, include_groups=False)
-        print(group.index)
         group['breed'] = group['name'].str.rsplit('_', expand=True, n= 1)[0]
 
         _create_log(group, k)
@@ -116,6 +110,8 @@ def analise_clusters():
 
 
 def main():
-    test_k()
-    analise_clusters()
+    scores = test_k()
+    analise_clusters(scores)
+
+main()
 
