@@ -165,3 +165,9 @@ dataset/*
 !dataset/extracted-features/
 !dataset/README.md
 test.py
+
+# Plots
+graphs
+
+# Cluster Logs
+logs 
