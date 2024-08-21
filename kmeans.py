@@ -77,7 +77,6 @@ def _create_log(data: DataFrameGroupBy, k: int, metric: str):
 
 
 def best_k(scores: pd.Series) -> dict:
-    #scores = pd.read_csv('clustering_scores.csv')
 
     best_silhouette = scores.idxmax() + 2
 
