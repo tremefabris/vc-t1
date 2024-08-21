@@ -85,4 +85,3 @@ class OxfordPetsDataset(Dataset):
         annotations['image_path'] = self.dataset_root + _image_folder + annotations['name'] + _image_extension
 
         return annotations
-
