@@ -34,7 +34,7 @@ def best_k_graph(scores:pd.DataFrame,
 
     # Silhouette
     fig.add_trace(go.Scatter(x=list(range(2, 38)),
-                            y=scores['silhouette'],
+                            y=scores,
                             mode='lines',
                             name='Silhueta',
                             line=dict(color='darkblue')))
@@ -43,7 +43,7 @@ def best_k_graph(scores:pd.DataFrame,
     fig.add_vline(x=best_silhouette, line_width=2, line_dash="dash", line_color="blue")
 
     fig.update_layout(
-        title='Silhueta e Davies Bouldin vs Número de Clusters',
+        #title='Silhueta vs Número de Clusters',
         xaxis=dict(title='Número de Clusters', tickvals=list(range(2, 38, 2))),
         yaxis=dict(title='Silhueta'),
         width=960,
@@ -66,8 +66,7 @@ def silhouette_plot(model: KMeans,
     centros = pca.transform(model.cluster_centers_)
     centros = pd.DataFrame({'x': centros[:, 0], 'y': centros[:, 1]})
 
-    plot = group.loc[([0,1,2])][(group.loc[([0,1,2])]['breed'] == 'shiba_inu') | (group.loc[([0,1,2])]['breed'] == 'Sphynx') | (group.loc[([0,1,2])]['breed'] == 'saint_bernard')].reset_index(level= 0, drop= False)
-    print(plot)
+    plot = group.loc[([0,1,2])][(group.loc[([0,1,2])]['breed'] == 'shiba_inu') | (group.loc[([0,1,2])]['breed'] == 'Sphynx') | (group.loc[([0,1,2])]['breed'] == 'saint_bernard')].reset_index(level= 0, drop= True)
 
     plot = plot.join(plotable_data)
 
@@ -173,8 +172,8 @@ def silhouette_plot(model: KMeans,
     fig.update_layout(
         xaxis_title='X',
         yaxis_title='Y',
-        width=1920,
-        height=1080
+        width=960,
+        height=540
     )
 
     fig.write_html('./graphs/silhoette.html')
