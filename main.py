@@ -37,10 +37,10 @@ if __name__ == '__main__':
     
 
     features = torch.cat(features, dim=0)
-    labels   = torch.cat(labels, dim=0)
+    labels   = dataset.full_labels
 
     print(features.shape)
     print(labels.shape)
 
     np.save('dataset/extracted-features/images.npy', features)
-    np.save('dataset/extracted-features/labels.npy', labels)
+    labels.to_csv('dataset/extracted-features/labels.csv')
