@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 from data import OxfordPetsDataset
 from model import load_resnet18
