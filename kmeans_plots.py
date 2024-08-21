@@ -28,8 +28,7 @@ def _calc_y(m, b, x):
         return m * x + b
 
 def best_k_graph(scores:pd.DataFrame, 
-                 best_silhouette: int, 
-                 best_davies: int):
+                 best_silhouette: int):
     # gráfico
     fig = go.Figure()
 
@@ -43,22 +42,10 @@ def best_k_graph(scores:pd.DataFrame,
     # Melhor coeficiente do Silhouette
     fig.add_vline(x=best_silhouette, line_width=2, line_dash="dash", line_color="blue")
 
-    # Davies
-    fig.add_trace(go.Scatter(x=list(range(2, 38)),
-                            y=scores['davies_bouldin'],
-                            mode='lines',
-                            name='Davies Bouldin',
-                            line=dict(color='red'),
-                            yaxis='y2'))
-
-    # Melhor coeficiente do Davies
-    fig.add_vline(x=best_davies, line_width=2, line_dash="dash", line_color="salmon")
-
     fig.update_layout(
         title='Silhueta e Davies Bouldin vs Número de Clusters',
         xaxis=dict(title='Número de Clusters', tickvals=list(range(2, 38, 2))),
         yaxis=dict(title='Silhueta'),
-        yaxis2=dict(title='Davies Bouldin', overlaying='y', side='right'),
         width=960,
         height=540
     )
@@ -76,16 +63,17 @@ def silhouette_plot(model: KMeans,
     pca = PCA(n_components= 2)
 
     plotable_data = pd.DataFrame(data= pca.fit_transform(features.values), columns=['x', 'y'], index= range(7349))
-    group = group.join(plotable_data)  # erro aqui
-
     centros = pca.transform(model.cluster_centers_)
+    centros = pd.DataFrame({'x': centros[:, 0], 'y': centros[:, 1]})
 
-    plot = group.loc[([0,1,2], ['cat', 'dog'],['sphynx', 'shiba_inu', 'saint_bernard'])].drop(columns= 'breed').reset_index()
+    plot = group.loc[([0,1,2])][(group.loc[([0,1,2])]['breed'] == 'shiba_inu') | (group.loc[([0,1,2])]['breed'] == 'Sphynx') | (group.loc[([0,1,2])]['breed'] == 'saint_bernard')].reset_index(level= 0, drop= False)
+    print(plot)
 
+    plot = plot.join(plotable_data)
 
     # Cores e simbolos
     breed_colors = {
-        'sphynx': 'blue',
+        'Sphynx': 'blue',
         'shiba_inu': 'green',
         'saint_bernard': 'red',
 
@@ -98,7 +86,7 @@ def silhouette_plot(model: KMeans,
 
     }
     plot['color'] = plot['breed'].map(breed_colors)
-    plot['symbol'] = plot['clusters_sc'].map(clusters_symbols)
+    plot['symbol'] = plot['silhouette'].map(clusters_symbols)
 
     # Plot
     fig = go.Figure()
@@ -117,19 +105,20 @@ def silhouette_plot(model: KMeans,
         name='Dados'
     ))
 
-    # Dados das piores raças
-    fig.add_trace(go.Scatter(
-        x=plot['x'],
-        y=plot['y'],
-        mode='markers',
-        marker=dict(
-            color=plot['color'],
-            symbol=plot['symbol'],
-            size=7
-        ),
-        text=plot['name'],
-        name='Piores raças'
-    ))
+    for breed_name in plot['breed'].unique():
+        breed_data = plot[plot['breed'] == breed_name]
+        fig.add_trace(go.Scatter(
+            x=breed_data['x'],
+            y=breed_data['y'],
+            mode='markers',
+            marker=dict(
+                color=breed_data['color'].iloc[0],
+                symbol=breed_data['symbol'].iloc[0],
+                size=7
+            ),
+            text=plot['name'],
+            name=breed_name
+        ))
 
     # centro dos clusters
     fig.add_trace(go.Scatter(
@@ -179,10 +168,9 @@ def silhouette_plot(model: KMeans,
             y_values[1] = np.clip(y_values[1], y_min, y_max)
             x_values[1] = (y_values[1] - b) / m
 
-        fig.add_trace(go.Scatter(x=x_values, y=y_values, mode='lines', line=dict(dash='dash', width=3, color='black')))
+        fig.add_trace(go.Scatter(x=x_values, y=y_values, mode='lines', line=dict(dash='dash', width=3, color='black'), showlegend= False))
 
     fig.update_layout(
-        title='Gráfico de Dispersão com Centros dos Clusters',
         xaxis_title='X',
         yaxis_title='Y',
         width=1920,
