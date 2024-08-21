@@ -2,15 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.multioutput import MultiOutputClassifier
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+from sklearn.decomposition import PCA
+from plots_knn import plot_TSNE
+from plots_knn import plot_confusion_matrix
+from plots_knn import plot_samples
 
 #  importando os dados
 images = np.load("./dataset/extracted-features/images.npy")
 labels = np.load('./dataset/extracted-features/labels.npy')
 
 # dividindo os dados de treino e teste
-x_train, x_test, y_train, y_test = train_test_split(images, labels, random_state = 42)
+x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.25, shuffle=True, random_state = 42)
 
 # lista contendo os k's que serão usados para o experimento
 ks = [2, 37]
@@ -22,7 +26,9 @@ for k in ks:
     if k == 2:
         y_train_2 = y_train[:, 1]
         y_test_2 = y_test[:,1]
+        show = False
     elif k == 37:
+        show = True
         y_train_2 = y_train[:, 2]
         y_test_2 = y_test[:,2]
 
@@ -39,7 +45,27 @@ for k in ks:
 
     # calculando as predições e a acuracia para o conjunto de teste
     y_pred_test = knn.predict(x_test)
+    print(classification_report(y_test_2, y_pred_test))
     test_accuracy.append((y_pred_test == y_test_2).mean())
+
+
+    if show:
+        # plot_TSNE(x_test, y_test_2, y_pred_test)
+        plot_confusion_matrix(confusion_matrix(y_test_2, y_pred_test), k)
+        # wrong_idx = y_test[y_pred_test!=y_test_2, 0]
+        # plot_samples(wrong_idx)
+
+
+    
+
+# plt.figure()
+# plt.title("Acuracia de treino")
+# plt.plot(ks, train_accuracy, label = "Treino")
+# plt.plot(ks, test_accuracy, label = "Teste")
+# plt.legend()
+# plt.xlabel("Numero de Vizinhos")
+# plt.ylabel("Acuracia")
+# plt.show()
 
 
 print(f"Acuracia treino: \nk=2: {train_accuracy[0]}\nk=37: {train_accuracy[1]}")
