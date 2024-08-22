@@ -11,8 +11,8 @@ from src.plots_knn import plot_samples
 import pandas as pd
 
 #  importando os dados
-images = np.load("./dataset/extracted-features/images.npy")
-labels = pd.read_csv('dataset/extracted-features/labels.csv')
+images = np.load("./data/extracted-features/images.npy")
+labels = pd.read_csv('data/extracted-features/labels.csv')
 labels = labels.drop(columns= labels.columns.difference(['species_id', 'breed_id', 'breed_id_on_species']))
 labels = labels.values
 
@@ -57,7 +57,7 @@ for k in ks:
         plot_TSNE(x_test, y_test_2, y_pred_test)
         plot_confusion_matrix(confusion_matrix(y_test_2, y_pred_test), k)
         wrong_idx = y_test[y_pred_test!=y_test_2, 0]
-        plot_samples(wrong_idx)
+        # plot_samples(wrong_idx)
 
 
 print(f"Acuracia treino: \nk=2: {train_accuracy[0]}\nk=37: {train_accuracy[1]}")

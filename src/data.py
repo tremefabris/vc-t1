@@ -9,7 +9,7 @@ from torchvision.io import read_image, ImageReadMode
 class OxfordPetsDataset(Dataset):
     
     def __init__(self,
-                 dataset_root = 'dataset/oxford-iiit-pet/',
+                 dataset_root = 'data/oxford-iiit-pet/',
                  transform = None,
                  target_transform = None):
         self.dataset_root = dataset_root

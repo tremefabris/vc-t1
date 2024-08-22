@@ -10,7 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset_path", help="Path of dataset",
-                    default='dataset/oxford-iiit-pet/', type=str)
+                    default='data/oxford-iiit-pet/', type=str)
 parser.add_argument("--batch_size", help="Amount of batch size",
                     default=64, type=int)
 parser.add_argument("--device", help="Device where run program, eg 'cuda' or 'cpu'",
@@ -52,9 +52,6 @@ if __name__ == '__main__':
 
     features = torch.cat(features, dim=0).cpu()
     labels = dataset.full_labels
-    
-    print(features.shape)
-    print(labels.shape)
 
-    np.save('dataset/extracted-features/images.npy', features)
-    labels.to_csv('dataset/extracted-features/labels.csv')
+    np.save('data/extracted-features/images.npy', features)
+    labels.to_csv('data/extracted-features/labels.csv')

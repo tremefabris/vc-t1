@@ -62,7 +62,7 @@ def silhouette_plot(model: KMeans,
 
     pca = PCA(n_components= 2)
 
-    plotable_data = pd.DataFrame(data= pca.fit_transform(features.values), columns=['x', 'y'], index= range(7349))
+    plotable_data = pd.DataFrame(data= pca.fit_transform(features), columns=['x', 'y'], index= range(7349))
     centros = pca.transform(model.cluster_centers_)
     centros = pd.DataFrame({'x': centros[:, 0], 'y': centros[:, 1]})
 
