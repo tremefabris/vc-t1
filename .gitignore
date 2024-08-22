@@ -174,3 +174,5 @@ log/*
 
 experiment*
 plots/cluster*
+
+dataset/*

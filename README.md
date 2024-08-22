@@ -14,7 +14,7 @@ Fonte: [https://www.robots.ox.ac.uk/~vgg/data/pets/](https://www.robots.ox.ac.uk
 
 ## Como funciona
 
-Este repositório não contem o dataset, logo, é necessario baixar e passar o caminho o caminho usando a flag assim como no exemplo a seguir
+Para o melhor fluxo dos treinamentos e validações das metodologias descritas no artigo, é recomendado seguir os seguintes passos para extração de features e fazer os treinamentos. Além disso, este repositório não contém o dataset, logo, é necessario baixar e passar o caminho usando a flag assim como no exemplo a seguir
 
 Para extrair as features:
 
@@ -27,3 +27,17 @@ Para executar o treinamento do algoritmo KNN
 ```bash
 python3 knn.py
 ```
+
+Para calcular o melhor valor de clusters para ser executado o K-Means
+
+```bash
+python3 calculate_best_k.py
+```
+
+Para executar o treinamento do algoritmo K-Means
+
+```bash
+python3 kmeans.py
+```
+
+
