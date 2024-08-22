@@ -33,6 +33,7 @@ def test_k():
         silhouette_coefficients.append(sc_mean/t)
 
     pd.DataFrame({'silhouette': silhouette_coefficients}).to_csv('./data/extracted-features/clustering_scores.csv', index= False)
+    print("Clustering scores saved!")
 
 
 if __name__ == '__main__':

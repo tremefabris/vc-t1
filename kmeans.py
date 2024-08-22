@@ -7,6 +7,7 @@ import shutil
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score
+
 from tqdm import tqdm
 
 from src.kmeans_plots import *
@@ -84,6 +85,8 @@ def analyze_clusters(scores: pd.Series):
 
         if metric == 'silhouette':
             silhouette_plot(model, group, features)
+        elif metric == 'species':
+            species_plot(model, group, features)
 
         print(f'K-Means com k = {k}')
         print(f'Ajusted Rand Score para label `species`: {adjusted_rand_score(labels["species_id"], labels[metric])}')
@@ -96,4 +99,3 @@ def main():
     analyze_clusters(scores)
 
 main()
-
